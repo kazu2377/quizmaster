@@ -1,14 +1,15 @@
 "use client"; // React のクライアントコンポーネントとして動作することを明示
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button"; // カスタムボタンコンポーネント
 import { Card } from "@/components/ui/card"; // カスタムカードコンポーネント
 import { Progress } from "@/components/ui/progress"; // カスタムプログレスバー
 import { useToast } from "@/components/ui/use-toast"; // トースト通知ユーティリティ
+import { fetchQuestions } from "@/lib/api"; // Supabaseからデータを取得する関数
 import { questions } from "@/lib/questions"; // 質問データのインポート
 import { storage } from "@/lib/storage"; // ストレージユーティリティ
 import { AnimatePresence, motion } from "framer-motion"; // アニメーションライブラリ
 import { CheckCircle2, History, XCircle } from "lucide-react"; // アイコン
-import { useState } from "react";
 
 // クイズコンポーネントのプロパティ型定義
 interface QuizProps {
@@ -27,6 +28,24 @@ export function Quiz({ userId, onShowHistory }: QuizProps) {
   const [showResults, setShowResults] = useState(false); // 結果表示フラグ
   const [score, setScore] = useState(0); // スコア
   const { toast } = useToast(); // トースト通知のフック
+
+  // Supabaseからデータを取得
+  useEffect(() => {
+    async function loadQuestions() {
+      try {
+        const questions = await fetchQuestions();
+        const shuffled = [...questions].sort(() => 0.5 - Math.random()); // ランダムにシャッフル
+        setCurrentQuestions(shuffled.slice(0, 10)); // 最初の10問をセット
+      } catch (error) {
+        console.error("Failed to fetch questions:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load questions",
+        });
+      }
+    }
+    loadQuestions();
+  }, []); // 初回レンダリング時に実行
 
   // 回答が選択された際の処理
   const handleAnswerSelect = (answerIndex: number) => {
