@@ -1,55 +1,62 @@
-"use client";
+"use client"; // React のクライアントコンポーネントとして動作することを明示
 
-import { useState, useEffect } from 'react';
-import { questions } from '@/lib/questions';
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Brain, CheckCircle2, XCircle, History, LogOut } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { storage } from '@/lib/storage';
-import { useToast } from '@/components/ui/use-toast';
+import { Button } from "@/components/ui/button"; // カスタムボタンコンポーネント
+import { Card } from "@/components/ui/card"; // カスタムカードコンポーネント
+import { Progress } from "@/components/ui/progress"; // カスタムプログレスバー
+import { useToast } from "@/components/ui/use-toast"; // トースト通知ユーティリティ
+import { questions } from "@/lib/questions"; // 質問データのインポート
+import { storage } from "@/lib/storage"; // ストレージユーティリティ
+import { AnimatePresence, motion } from "framer-motion"; // アニメーションライブラリ
+import { CheckCircle2, History, XCircle } from "lucide-react"; // アイコン
+import { useState } from "react";
 
+// クイズコンポーネントのプロパティ型定義
 interface QuizProps {
-  userId: string;
-  onShowHistory: () => void;
+  userId: string; // ユーザーID
+  onShowHistory: () => void; // 履歴を表示するためのコールバック
 }
 
+// クイズコンポーネント
 export function Quiz({ userId, onShowHistory }: QuizProps) {
+  // 状態管理
   const [currentQuestions, setCurrentQuestions] = useState(
-    [...questions].sort(() => 0.5 - Math.random()).slice(0, 10)
+    [...questions].sort(() => 0.5 - Math.random()).slice(0, 10) // ランダムに質問を選択
   );
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
-  const [showResults, setShowResults] = useState(false);
-  const [score, setScore] = useState(0);
-  const { toast } = useToast();
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // 現在の質問インデックス
+  const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]); // 選択された回答
+  const [showResults, setShowResults] = useState(false); // 結果表示フラグ
+  const [score, setScore] = useState(0); // スコア
+  const { toast } = useToast(); // トースト通知のフック
 
+  // 回答が選択された際の処理
   const handleAnswerSelect = (answerIndex: number) => {
     const newSelectedAnswers = [...selectedAnswers];
-    newSelectedAnswers[currentQuestionIndex] = answerIndex;
+    newSelectedAnswers[currentQuestionIndex] = answerIndex; // 現在の質問の回答を記録
     setSelectedAnswers(newSelectedAnswers);
 
     if (currentQuestionIndex < 9) {
+      // 次の質問に進む
       setTimeout(() => {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
-      }, 300);
+      }, 300); // 0.3秒のディレイ
     } else {
+      // 最後の質問の場合、結果を計算して表示
       const finalScore = newSelectedAnswers.reduce((acc, answer, index) => {
-        return acc + (answer === currentQuestions[index].correctAnswer ? 1 : 0);
+        return acc + (answer === currentQuestions[index].correctAnswer ? 1 : 0); // 正答の場合スコア加算
       }, 0);
       setScore(finalScore);
       setShowResults(true);
 
-      // Save the quiz result
+      // 結果を保存
       storage.saveQuizResult({
-        id: Date.now().toString(),
+        id: Date.now().toString(), // ユニークなID
         userId,
         score: finalScore,
         totalQuestions: 10,
         date: new Date().toISOString(),
       });
 
+      // 結果通知
       toast({
         title: "Quiz Completed!",
         description: `You scored ${finalScore} out of 10`,
@@ -57,15 +64,17 @@ export function Quiz({ userId, onShowHistory }: QuizProps) {
     }
   };
 
+  // クイズのリセット
   const restartQuiz = () => {
-    const shuffled = [...questions].sort(() => 0.5 - Math.random());
-    setCurrentQuestions(shuffled.slice(0, 10));
+    const shuffled = [...questions].sort(() => 0.5 - Math.random()); // 質問を再度シャッフル
+    setCurrentQuestions(shuffled.slice(0, 10)); // 新しい質問を設定
     setCurrentQuestionIndex(0);
     setSelectedAnswers([]);
     setShowResults(false);
     setScore(0);
   };
 
+  // 結果画面
   if (showResults) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 p-4">
@@ -116,8 +125,10 @@ export function Quiz({ userId, onShowHistory }: QuizProps) {
     );
   }
 
+  // 現在の質問を取得
   const currentQuestion = currentQuestions[currentQuestionIndex];
 
+  // 質問画面
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 p-4">
       <Card className="w-full max-w-2xl p-6">

@@ -197,10 +197,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
             onClick={() => setIsNewUser(!isNewUser)} // モードを切り替え
             className="text-sm text-blue-500 hover:underline"
           >
-            {isNewUser
-              ? "Already have an account? Login" // ログインへの切り替えリンク
-              : "Don't have an account? Sign up"}{" "}
-            // 新規登録への切り替えリンク
+            {isNewUser ? "Already have an account? Login" : "Don't have an account? Sign up"}
           </button>
         </div>
       </Card>
