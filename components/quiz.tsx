@@ -48,7 +48,7 @@ export function Quiz({ userId, onShowHistory }: QuizProps) {
   }, []); // 初回レンダリング時に実行
 
   // 回答が選択された際の処理
-  const handleAnswerSelect = (answerIndex: number) => {
+  const handleAnswerSelect = async (answerIndex: number) => {
     const newSelectedAnswers = [...selectedAnswers];
     newSelectedAnswers[currentQuestionIndex] = answerIndex; // 現在の質問の回答を記録
     setSelectedAnswers(newSelectedAnswers);
@@ -65,6 +65,34 @@ export function Quiz({ userId, onShowHistory }: QuizProps) {
       }, 0);
       setScore(finalScore);
       setShowResults(true);
+
+      // 結果を保存（Supabaseに送信）
+      try {
+        const response = await fetch("/api/quizResults", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId,
+            score: finalScore,
+            totalQuestions: 10,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to save quiz result");
+        }
+
+        const result = await response.json();
+        console.log("Quiz result saved:", result);
+      } catch (error) {
+        console.error("Error saving quiz result:", error);
+        toast({
+          title: "Error",
+          description: "Failed to save quiz result",
+        });
+      }
 
       // 結果を保存
       storage.saveQuizResult({
