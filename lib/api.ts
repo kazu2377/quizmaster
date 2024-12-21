@@ -15,6 +15,6 @@ export async function fetchQuestions(): Promise<Question[]> {
     id: question.id,
     text: question.text,
     options: question.options,
-    correctAnswer: question.correctAnswer,
+    correctAnswer: question.correctanswer,
   }));
 }
