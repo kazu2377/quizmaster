@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model questions {
+  id            Int    @id @default(autoincrement())
+  text          String
+  options       Json
+  correctanswer Int
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model quiz_results {
+  id              String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id         String
+  score           Int
+  total_questions Int
+  date            DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model simple_table {
+  id   String  @id(map: "new_simple_table_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String?
+}

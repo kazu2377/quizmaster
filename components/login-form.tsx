@@ -112,41 +112,41 @@ export function LoginForm({ onLogin }: LoginFormProps) {
 
   const 関数実行 = 関数いれる();
 
-  const promise = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      reject("Promise resolved");
-    }, 2000);
-  });
+  // const promise = new Promise((resolve, reject) => {
+  //   setTimeout(() => {
+  //     reject("Promise resolved");
+  //   }, 2000);
+  // });
 
-  promise.catch((data) => {
-    console.log(data);
-  });
+  // promise.catch((data) => {
+  //   console.log(data);
+  // });
 
-  function delay(ms: number) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        try {
-          // Simulating an error
-          throw new Error("Something went wrongあ");
-        } catch (error) {
-          reject(error);
-        }
-      }, ms);
-    });
-  }
-  async function asyncFunction() {
-    console.log("Start");
-    try {
-      await delay(2000);
-    } catch (error) {
-      console.error("Erroraaaaaaaa:", error);
-    }
-    // await delay(2000);
+  // function delay(ms: number) {
+  //   return new Promise((resolve, reject) => {
+  //     setTimeout(() => {
+  //       try {
+  //         // Simulating an error
+  //         throw new Error("Something went wrongあ");
+  //       } catch (error) {
+  //         reject(error);
+  //       }
+  //     }, ms);
+  //   });
+  // }
+  // async function asyncFunction() {
+  //   console.log("Start");
+  //   try {
+  //     await delay(2000);
+  //   } catch (error) {
+  //     console.error("Erroraaaaaaaa:", error);
+  //   }
+  //   // await delay(2000);
 
-    console.log("End");
-  }
+  //   console.log("End");
+  // }
 
-  asyncFunction();
+  // asyncFunction();
 
   // フォーム送信時の処理
   const onSubmit = (data: z.infer<typeof formSchema>) => {
