@@ -1,3 +1,5 @@
+//オープンAIで問い合わせに対して答えるためのモデルを指定
+
 // import { QuizDataType } from "@/actions/createQuestion";
 // import createQuiz from "@/actions/createQuiz";
 import { NextResponse } from "next/server";

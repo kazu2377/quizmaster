@@ -1,3 +1,5 @@
+//オープンAIでファインチューニングにて問い合わせ
+
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
