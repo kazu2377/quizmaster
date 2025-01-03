@@ -84,13 +84,13 @@ const QuizPage: React.FC = () => {
     let evaluation = "";
 
     if (percentage === 100) {
-      evaluation = "完璧です！すべて正解しました！🎉";
+      evaluation = "ハンターランク昇格試験、完璧な結果です！🎊";
     } else if (percentage >= 80) {
-      evaluation = "素晴らしい！ほとんど正解です。👍";
+      evaluation = "素晴らしい狩りっぷりですね！上位ハンターの実力です！🔥";
     } else if (percentage >= 50) {
-      evaluation = "良いですね！もう少しで完璧です。😊";
+      evaluation = "まだまだハンターとしては駆け出しですね。経験を重ねましょう！⚔️";
     } else {
-      evaluation = "もう一度挑戦してみましょう。💪";
+      evaluation = "今回は力及ばず...装備を見直して再挑戦しましょう！🛡️";
     }
 
     setResult({ score, total, evaluation });

@@ -31,7 +31,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, loading }) => {
                   : "bg-muted rounded-t-lg rounded-br-lg"
               )}
             >
-              <div className="text-sm">{message.content}</div>
+              <div className="text-sm">{typeof message.content === 'string' ? message.content : message.content?.[0]?.type === 'text' ? message.content[0].text : ''}</div>
             </div>
           </div>
         </div>
